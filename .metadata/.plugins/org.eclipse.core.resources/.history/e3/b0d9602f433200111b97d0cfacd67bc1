@@ -1,0 +1,146 @@
+#include<cstdint>
+#include"stm32f405xx.h"
+
+class GPIO
+{
+public:
+    static void enable_clock()
+    {
+
+    	RCC->AHB1ENR |= (1U << 3);  // Enable GPIOD clock
+    	RCC->AHB1ENR |=(1U<<0);
+    }
+
+    static void set_output(std::uint32_t pin)
+    {
+        GPIOD->MODER &= ~(3U << (pin * 2));
+        GPIOD->MODER |=  (1U << (pin * 2));
+    }
+  static void set_input()
+  {
+	  GPIOA->MODER &=~(3U<<0);
+
+  }
+    static void toggle(std::uint32_t pin)
+    {
+        GPIOD->ODR ^= (1U << pin);
+    }
+};
+
+
+class LED
+{
+
+public:
+    explicit LED()
+    {
+    	GPIO::set_output(12);
+    	GPIO::set_output(13);
+    	GPIO::set_output(14);
+    	GPIO::set_output(15);
+
+    }
+
+    void Led_green_toggle()
+    {
+
+        GPIO::toggle(12);
+    }
+    void Led_orange_toggle()
+        {
+
+            GPIO::toggle(13);
+        }
+    void Led_red_toggle()
+        {
+
+            GPIO::toggle(14);
+        }
+    void Led_blue_toggle()
+        {
+
+            GPIO::toggle(15);
+        }
+    uint8_t Switch_state()
+    {
+    	return (GPIOA->IDR &(1U<<0)) !=0;
+    }
+};
+
+
+void delay()
+{
+    for (volatile std::uint32_t i = 0; i < 100000; ++i)
+    {
+
+    }
+}
+
+int main()
+{
+
+    // Explicit hardware initialization
+    GPIO::enable_clock();
+
+    // Safe object creation (after hardware is ready)
+    LED *L1=new LED;
+
+    while (true)
+    {
+
+         while(1)
+           {
+
+        	      L1->Led_green_toggle();
+
+        	      try
+        	      {
+
+        	      if(L1->Switch_state())
+        	      {
+        	    	  throw obj;// class type
+        	      }
+
+        	      }
+        	      catch(const uint8_t& g)
+        	    	     	   	 {
+        	    	     	   		 L1->Led_orange_toggle();
+        	    	     	   		 for(uint32_t i=0 ; i < 300000 ; i++ );
+        	    	     	   		 delete L1;
+
+        	    	     	   	 }
+
+        	     catch(const uint16_t& g)
+        	     	   	 {
+        	     	   		 L1->Led_blue_toggle();
+        	     	   		 for(uint32_t i=0 ; i < 300000 ; i++ );
+        	     	   		 delete L1;
+
+        	     	   	 }
+
+        	   	 catch(const uint32_t& g)
+        	   	 {
+        	   		 L1->Led_red_toggle();
+        	   		 for(uint32_t i=0 ; i < 300000 ; i++ );
+        	   		 delete L1;
+
+        	   	 }
+        	   	 catch(const LED& g)
+        	   		   	 {
+        	   		   		 L1->Led_red_toggle();
+        	   		   	     L1->Led_blue_toggle();
+        	   		   	     L1->Led_orange_toggle();
+        	   		   		 for(uint32_t i=0 ; i < 300000 ; i++ );
+        	   		   		 delete L1;
+
+        	   		   	 }
+
+        	   	 catch(...)// catch all
+        	   		   	   {
+        	   		       delete L1;
+
+        	   		   	   }
+
+
+    }
+}

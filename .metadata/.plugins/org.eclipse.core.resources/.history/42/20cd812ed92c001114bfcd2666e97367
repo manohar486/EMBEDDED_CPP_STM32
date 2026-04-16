@@ -1,0 +1,90 @@
+#include<cstdint>
+#include<stm32f405xx.h>
+class enable_clock{
+public:
+	enable_clock()
+	{
+		RCC->AHB1ENR |=(1U<<3);
+		RCC->AHB1ENR |=(1U<<0);
+	}
+	~enable_clock()
+	{
+			RCC->AHB1ENR &= ~(1U<<3);
+			RCC->AHB1ENR &= ~(1U<<0);
+	}
+
+};
+
+class GPIO{
+
+public:
+
+	static void set_output(uint8_t pin)
+	{
+		GPIOD->MODER &=~(3U<<(pin*2));
+		GPIOD->MODER |= (1U<<(pin*2));
+
+	}
+
+	static void set_input(uint8_t pin)
+		{
+		GPIOA->MODER &= ~(3U<<(pin*2));
+
+		}
+
+
+};
+template<uint8_t pin>
+class led
+{
+	led()
+	{
+		GPIO::set_output(pin);
+	}
+
+
+public:
+	static led& instance()
+		{
+			static led inst;
+			return inst;
+		}
+
+	led(led&) =delete;
+	led& operator() (led &)=delete;
+
+	void led_on()
+	{
+		GPIOD->ODR |= (1U<<pin);
+	}
+	void led_off()
+	{
+		GPIOD->ODR &= ~(1U<<pin);
+	}
+
+	void toggle()
+	{
+		GPIOD->ODR ^= (1U<<pin);
+	}
+
+
+};
+
+void delay()
+{
+	for(uint32_t i=0;i<300000;i++);
+}
+int main()
+{
+
+	clock_enable obj;
+
+	led<12> obj=led::instance();
+
+	while(true)
+	{
+		obj.toggle();
+		delay();
+	}
+
+}

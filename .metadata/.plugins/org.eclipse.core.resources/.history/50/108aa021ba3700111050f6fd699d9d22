@@ -1,0 +1,28 @@
+#include<cstdint>
+#include"stm32f405xx.h"
+
+void Button_EXTI_Init(void)
+{
+    /* Enable clocks */
+    RCC->AHB1ENR |= (1 << 0);   // GPIOA
+    RCC->APB2ENR |= (1 << 14);  // SYSCFG
+
+    /* PA0 as input */
+    GPIOA->MODER &= ~(3 << (0 * 2));
+
+    /* Pull-down */
+    GPIOA->PUPDR &= ~(3 << (0 * 2));
+    GPIOA->PUPDR |=  (2 << (0 * 2));  // Pull-down
+
+    /* Map EXTI0 to PA0 */
+    SYSCFG->EXTICR[0] &= ~(0xF << 0);  // 0000 = PA0
+
+    /* Rising edge trigger */
+    EXTI->RTSR |= (1 << 0);
+
+    /* Unmask interrupt */
+    EXTI->IMR |= (1 << 0);
+
+    /* NVIC Enable (IRQ6 for EXTI0) */
+    *((volatile uint32_t*)0xE000E100) |= (1 << 6);
+}

@@ -1,0 +1,62 @@
+#include<cstdint>
+#include "stm32f405xx.h"
+
+void usart3_init()
+{
+	// clock enable
+
+	RCC->AHB1ENR |=(1U<<2);// enable clock for GPIOC
+	RCC->APB1ENR |=(1U<<18);// enable 	USRAT3 enable
+
+	//tx=pc10 rx =pc11
+	GPIOC->MODER &=~(3U<<(10*2));
+	GPIOC->MODER |=(2U<<(10*2));
+	GPIOC->AFR[1] &= ~(0xf<<8); // enable rx for usart3 that afrh ->af7
+	GPIOC->AFR[1] |= (0x7<<8);
+
+	GPIOC->MODER &= ~(3U<<(11*2));
+	GPIOC->MODER |= (2U<<(11*2));
+	GPIOC->AFR[1] &= ~(0xf<<12); // enable rx for usart3 that afrh ->af7
+	GPIOC->AFR[1] |= (0x7<<12);
+
+	// uart settings
+
+	USART3->BRR |=0x0683;
+	USART3->CR1 |=(1U<<2); //TE enable
+	//USART3->CR1 |=(1U<<3);// RE enable
+	USART3->CR1 |=(1U<<13); // USRAT UE enable
+
+
+}
+
+void usart3_write(uint8_t ch)
+{
+	while(!(USART3->SR &(1<<7)));// waiting for empty txe
+
+	USART3->DR=ch;
+
+	while(!(USART3->SR &( 1<<6)));
+
+
+}
+void delay(uint32_t ms)
+{
+
+	for( ;ms>0; ms--)
+		for(uint32_t i=0;i<2000;i++);
+}
+
+
+int main()
+{
+
+	usart3_init();
+
+	while(true)
+	{
+
+		usart3_write('a');
+		delay(200);
+
+	}
+}

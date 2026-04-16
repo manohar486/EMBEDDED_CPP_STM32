@@ -1,0 +1,97 @@
+#include<cstdint>
+#include "stm32f405xx.h"
+enum class led:uint8_t
+{
+	GREEN=12,
+	ORANGE,
+	RED,
+	BLUE,
+};
+
+class GPIOClockGuard
+{
+public:
+    GPIOClockGuard()
+    {
+        RCC->AHB1ENR |= (1U << 3); // Enable GPIOD
+        RCC->AHB1ENR |= (1U << 0); // Enable GPIOA
+
+    }
+
+    ~GPIOClockGuard()
+    {
+        RCC->AHB1ENR &= ~(1U << 3); // Disable GPIOD
+        RCC->AHB1ENR &= ~(1U << 0); // Disable GPIOA
+
+    }
+};
+
+
+class GPIO
+{
+public:
+    static void set_output(volatile std::uint32_t& moder, std::uint8_t pin)
+    {
+        moder &= ~(3U << (pin * 2));
+        moder |=  (1U << (pin * 2)); // Output mode
+    }
+
+    static void set_input(volatile std::uint32_t& moder, std::uint8_t pin)
+    {
+        moder &= ~(3U << (pin * 2)); // Input mode (00)
+    }
+
+    static void toggle(volatile std::uint32_t& odr, std::uint8_t pin)
+    {
+        odr ^= (1U << pin);
+    }
+
+    static bool read(volatile std::uint32_t& idr, std::uint8_t pin)
+    {
+        return (idr & (1U << pin))!=0;
+    }
+};
+
+// ==============================
+//  Delay
+// ==============================
+void delay()
+{
+    for (std::uint32_t i = 0; i < 100000; ++i)
+    {
+        // Prevent optimization
+    }
+}
+
+int main()
+{
+	GPIOClockGuard obj;
+constexpr uint8_t Led_g =12;
+constexpr uint8_t Led_o =13;
+constexpr uint8_t Led_r =14;
+constexpr uint8_t Led_b =15;
+constexpr uint8_t sw_b=0;
+	GPIO::set_output(GPIOD->MODER,Led_g);
+	GPIO::set_input(GPIOA->MODER, sw_b);
+
+	GPIO::set_output(GPIOD->MODER,Led_o);
+	GPIO::set_output(GPIOD->MODER,Led_r);
+	GPIO::set_output(GPIOD->MODER,Led_b);
+
+
+	while(true)
+	{
+
+		if(GPIO::read(GPIOA->IDR,led::GREEN))
+		{
+			break;
+		}
+
+	   GPIO::toggle(GPIOD->ODR, led::GREEN);
+	   GPIO::toggle(GPIOD->ODR, led::ORANGE);
+	   GPIO::toggle(GPIOD->ODR, led::RED);
+	   GPIO::toggle(GPIOD->ODR, led::BLUE);
+	   delay();
+	}
+}
+

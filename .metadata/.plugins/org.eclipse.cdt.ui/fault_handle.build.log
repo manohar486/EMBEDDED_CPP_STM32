@@ -1,0 +1,33 @@
+10:28:33 **** Incremental Build of configuration Debug for project fault_handle ****
+make -j8 all 
+arm-none-eabi-g++ "../Src/main.cpp" -mcpu=cortex-m4 -std=gnu++14 -g3 -DDEBUG -DSTM32 -DSTM32F407G_DISC1 -DSTM32F4 -DSTM32F407VGTx -c -I../Inc -O0 -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti -fno-use-cxa-atexit -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/main.d" -MT"Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/main.o"
+../Src/main.cpp: In function 'void HardFault_Handler_c(uint32_t*)':
+../Src/main.cpp:87:51: warning: format '%lx' expects argument of type 'long unsigned int', but argument 2 has type 'int' [-Wformat=]
+   87 |     printf("statu of usagefault in hardfault  = %lx\n",status);
+      |                                                 ~~^    ~~~~~~
+      |                                                   |    |
+      |                                                   |    int
+      |                                                   long unsigned int
+      |                                                 %x
+../Src/main.cpp: In function 'void UsageFault_Handler_c(uint32_t*)':
+../Src/main.cpp:112:54: warning: format '%lx' expects argument of type 'long unsigned int', but argument 2 has type 'int' [-Wformat=]
+  112 |     printf("statu of usage fault in usage fault  = %lx\n",status);
+      |                                                    ~~^    ~~~~~~
+      |                                                      |    |
+      |                                                      |    int
+      |                                                      long unsigned int
+      |                                                    %x
+arm-none-eabi-g++ -o "fault_handle.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/mirafra/STM32CubeIDE/workspace_2.1.1/fault_handle/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="fault_handle.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Finished building target: fault_handle.elf
+ 
+arm-none-eabi-size  fault_handle.elf 
+arm-none-eabi-objdump -h -S fault_handle.elf  > "fault_handle.list"
+   text	   data	    bss	    dec	    hex	filename
+   5892	     92	   1900	   7884	   1ecc	fault_handle.elf
+Finished building: default.size.stdout
+ 
+Finished building: fault_handle.list
+ 
+
+10:28:33 Build Finished. 0 errors, 2 warnings. (took 122ms)
+

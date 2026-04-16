@@ -1,0 +1,18 @@
+../Src/main.cpp:10:6:void delay_ms(uint32_t)	24	static
+../Src/main.cpp:17:6:void Button_EXTI_Init()	4	static
+../Src/main.cpp:43:6:void gpio_init()	16	static
+../Src/main.cpp:71:2:Button::Button(uint8_t)	16	static
+../Src/main.cpp:75:7:void Button::attach(Observer*)	16	static
+../Src/main.cpp:82:8:void Button::notifyObservers()	16	static
+../Src/main.cpp:88:10:void Button::notify()	24	static
+../Src/main.cpp:59:7:constexpr Observer::Observer()	16	static
+../Src/main.cpp:102:2:greenLed::greenLed(uint8_t)	16	static
+../Src/main.cpp:106:7:virtual void greenLed::onButtonPressed()	16	static
+../Src/main.cpp:124:2:orangeLed::orangeLed(uint8_t)	16	static
+../Src/main.cpp:128:7:virtual void orangeLed::onButtonPressed()	16	static
+../Src/main.cpp:146:2:redLed::redLed(uint8_t)	16	static
+../Src/main.cpp:150:7:virtual void redLed::onButtonPressed()	16	static
+../Src/main.cpp:168:2:blueLed::blueLed(uint8_t)	16	static
+../Src/main.cpp:172:7:virtual void blueLed::onButtonPressed()	16	static
+../Src/main.cpp:186:17:void EXTI0_IRQHandler()	8	static
+../Src/main.cpp:200:5:int main()	40	static,ignoring_inline_asm

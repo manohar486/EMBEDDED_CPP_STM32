@@ -1,0 +1,121 @@
+
+/* Standard includes. */
+#include <stdio.h>
+#include <stdlib.h>
+#include "FreeRTOS.h"		/* RTOS firmware */
+#include "task.h"			/* Task */
+#include "timers.h"
+
+#define mainDELAY_LOOP_COUNT		( 0xffffff )
+
+/* The task function. */
+/* The two task functions. */
+void vDriverAssistanceTask( void *pvParameters );
+void vEmergencySystemTask( void *pvParameters );
+
+TaskHandle_t xDriverHandle;
+TaskHandle_t xEmergencyHandle;
+
+void vApplicationIdleHook(void);
+typedef struct sensor
+{
+int coll;//0,1
+float temp;
+int door;
+}Sensor_status;
+
+
+int main ( void )
+{
+
+
+	HAL_Init();
+	SystemClock_Config();
+	MX_GPIO_Init();
+        Sensor_status t1;
+        t1.coll=0;
+        t1.temp=50.00;
+        t1.door=0;
+
+	xTaskCreate(vDriverAssistanceTask,"DriverAssistanceTask",200,(void*)&t1,3,&xDriverHandle);
+	xTaskCreate(vEmergencySystemTask, "EmergencySystemTask",200,(void*)&t1,2,&xEmergencyHandle);
+
+
+
+         /* The task handle is the last parameter ^^^^^^^^^^^^^ */
+
+	/* Start the scheduler to start the tasks executing. */
+	vTaskStartScheduler();
+
+	while(1)
+	{
+	}
+	return 0;
+}
+
+void vAssertCalled( unsigned long ulLine, const char * const pcFileName )
+{
+ 	taskENTER_CRITICAL();
+	{
+        printf("[ASSERT] %s:%lu\n", pcFileName, ulLine);
+        fflush(stdout);
+	}
+	taskEXIT_CRITICAL();
+	exit(-1);
+}
+
+
+void vDriverAssistanceTask(void *pvParameters ) //&t1
+{
+        Sensor_status* sptr= (Sensor_status*)pvParameters;
+        UBaseType_t uxDPriority;
+        printf( "DriverAssistanceTask\r\n" );
+	uxDPriority = uxTaskPriorityGet(NULL);
+	sptr->coll=1;
+	while(1)
+	{
+		printf( "DriverAssistanceTask\r\n" );
+                if(sptr->coll==1)
+                {
+                printf( "Calling EmergencySystemTask\r\n" );
+                printf( "About to raise the EmergencySystemTask priority\r\n" );
+		vTaskPrioritySet(xEmergencyHandle ,(uxDPriority+1) );//xEmergencyHandle =3+1 =4
+                }
+
+
+	}
+}
+void vEmergencySystemTask(void *pvParameters )
+{
+        Sensor_status* sptr= (Sensor_status*)pvParameters;
+        UBaseType_t uxEPriority; //4
+
+	uxEPriority = uxTaskPriorityGet(NULL);
+
+	printf( "Temperature data :%.2f\r\n",sptr->temp );
+	//sptr->coll=0;
+
+	//vTaskPrioritySet(xEmergencyHandle,(uxEPriority-2) );
+	while(1)
+	{
+	printf( "Inside EmergencySystemTask\r\n" );
+	 (sptr->coll)++;
+	 if(sptr->coll>=200000)
+	 {
+	printf( "Temperature data :%.2f\r\n",sptr->temp );
+	vTaskPrioritySet(xEmergencyHandle,(uxEPriority-2));
+	printf( "Exiting from EmergencySystemTask\r\n" );
+	}
+	//
+	}
+}
+
+
+void vApplicationIdleHook(void)
+{
+	/* This hook function does nothing but increment a counter. */
+
+ printf("idle");
+}
+/*-----------------------------------------------------------*/
+

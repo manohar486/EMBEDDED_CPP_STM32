@@ -1,0 +1,10 @@
+10:01:31 **** Incremental Build of configuration Debug for project using_two_ext1_interrupt ****
+make -j8 all 
+arm-none-eabi-size  using_two_ext1_interrupt.elf 
+   text	   data	    bss	    dec	    hex	filename
+   1504	      8	   1568	   3080	    c08	using_two_ext1_interrupt.elf
+Finished building: default.size.stdout
+ 
+
+10:01:31 Build Finished. 0 errors, 0 warnings. (took 70ms)
+

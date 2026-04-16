@@ -1,0 +1,11 @@
+../Core/Src/main.cpp:8:6:void EXTI1_Init()	1
+../Core/Src/main.cpp:32:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:70:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:225:17:void EXTI0_IRQHandler()	2
+../Core/Src/main.cpp:237:5:int main()	1
+../Core/Src/main.cpp:264:6:void vAssertCalled(long unsigned int, const char*)	0
+../Core/Src/main.cpp:276:6:void vDriverAssistanceTask(void*)	2
+../Core/Src/main.cpp:296:6:void vEmergencySystemTask(void*)	2
+../Core/Src/main.cpp:322:6:void vApplicationIdleHook()	1
+../Core/Src/main.cpp:329:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:346:6:void Error_Handler()	1

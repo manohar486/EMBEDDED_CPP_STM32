@@ -1,0 +1,177 @@
+#include<cstdint>
+#include"stm32f405xx.h"
+uint8_t count_sw;
+void delay(uint8_t ms)
+{
+	for( ;ms>0;ms--)
+		for(int i=0;i<2000;i++);
+}
+void gpio_init()
+{
+RCC->AHB1ENR |=(1U<<3);
+RCC->AHB1ENR |=(1U<<0);
+
+for(int i=12;i<16;i++)
+{
+	GPIOD->MODER &=(3U<<(i*2));
+	GPIOD->MODER |=(1U<<(i*2));
+
+}
+
+GPIOA->MODER &=(3U<<0);
+}
+class observer
+{
+public:
+	virtual void update()=0;
+};
+
+
+class subject
+{
+	uint8_t count;
+	vector<observer *>vect;
+	uint8_t status;
+
+	void notify()
+	{
+		for(int i=0;i<count;i++)
+			vect[i]->update();
+	}
+public:
+	subject():count(0){}
+
+	void attach(observer *obj)
+	{
+		if(vect[count++]<10)
+		{
+			vect.push_back(obj);
+		}
+	}
+	uint8_t read()
+	{
+		return GPIOA->IDR &(1U<<0)!=0;
+	}
+	void poll()
+	{
+
+		static uint8_t prev_status=0;
+
+		status=read();
+		delay(20);
+		if(prev_status ==0 && status ==1)
+		{
+			count_sw++;
+			notify();
+		}
+
+
+		prev_status=status;
+
+	}
+
+};
+
+class LedGreen:public observer
+{
+	GPIO_TypeDef *port;
+	uint8_t pin;
+public:
+	LedGreen(GPIO_TypeDef *gpio ,uint8_t p):port(gpio),pin(p){}
+
+	void update()override
+	{
+		if(count_sw%2==0 || count_sw==10)
+		{
+			port->ODR |=(1U<<pin);
+		}
+		else
+		{
+			port->ODR &=~(1U<<pin);
+		}
+	}
+};
+class OrangeGreen:public observer
+{
+	GPIO_TypeDef *port;
+	uint8_t pin;
+public:
+	OrangeGreen(GPIO_TypeDef *gpio ,uint8_t p):port(gpio),pin(p){}
+
+	void update()override
+	{
+		if(count_sw%2==0 || count_sw==10)
+		{
+			port->ODR |=(1U<<pin);
+		}
+		else
+		{
+			port->ODR &=~(1U<<pin);
+		}
+	}
+};
+class BlueGreen:public observer
+{
+	GPIO_TypeDef *port;
+	uint8_t pin;
+public:
+	BlueGreen(GPIO_TypeDef *gpio ,uint8_t p):port(gpio),pin(p){}
+
+	void update()override
+	{
+		if(count_sw%2==0 || count_sw==10)
+		{
+			port->ODR |=(1U<<pin);
+		}
+		else
+		{
+			port->ODR &=~(1U<<pin);
+		}
+	}
+};
+class RedGreen:public observer
+{
+	GPIO_TypeDef *port;
+	uint8_t pin;
+public:
+	RedGreen(GPIO_TypeDef *gpio ,uint8_t p):port(gpio),pin(p){}
+
+	void update()override
+	{
+		if(count_sw%2==0 || count_sw==10)
+		{
+			port->ODR |=(1U<<pin);
+		}
+		else
+		{
+			port->ODR &=~(1U<<pin);
+		}
+	}
+};
+
+
+
+int main()
+{
+
+	Gpio_init();
+
+	GreenLed G1(GPIOD,12);
+	OrangeLed O1(GPIOD,13);
+	RedLed R1(GPIOD,14);
+	BlueLed B1(GPIOD,15);
+
+	subject obj;
+	obj.attach(&G1);
+	obj.attach(&O1);
+	obj.attach(&R1);
+	obj.attach(&B1);
+
+	while(1)
+	{
+		obj.poll();
+	}
+
+}
+
+

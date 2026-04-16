@@ -1,0 +1,10 @@
+11:59:30 **** Incremental Build of configuration Debug for project exception_hand ****
+make -j8 all 
+arm-none-eabi-size  exception_hand.elf 
+   text	   data	    bss	    dec	    hex	filename
+  11688	     96	   1936	  13720	   3598	exception_hand.elf
+Finished building: default.size.stdout
+ 
+
+11:59:30 Build Finished. 0 errors, 0 warnings. (took 70ms)
+

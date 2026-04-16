@@ -1,0 +1,7 @@
+../Src/main.cpp:8:6:void LED_Init()	1
+../Src/main.cpp:15:6:void USART3_Init()	1
+../Src/main.cpp:34:6:void TIM2_Init()	1
+../Src/main.cpp:55:6:void USART3_write(uint8_t)	3
+../Src/main.cpp:61:6:void USART3_write_string(const char*)	2
+../Src/main.cpp:67:17:void TIM2_IRQHandler()	2
+../Src/main.cpp:81:5:int main()	1

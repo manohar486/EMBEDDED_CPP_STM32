@@ -1,0 +1,26 @@
+2026-04-08 08:56:43,214 [INFO] Activator:176 - 
+
+
+2026-04-08 08:56:43,221 [INFO] Activator:177 - !SESSION log4j initialized
+2026-04-08 08:56:47,908 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2026-04-08 10:12:17,688 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true
+2026-04-08 10:13:55,406 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true
+2026-04-08 10:23:23,225 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=false
+2026-04-08 10:23:26,536 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true
+2026-04-08 10:25:23,977 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=false
+2026-04-08 10:25:27,515 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true
+2026-04-08 10:25:29,565 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=false
+2026-04-08 10:25:31,680 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true
+2026-04-08 10:27:18,479 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=false
+2026-04-08 10:27:20,588 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true
+2026-04-08 12:17:41,289 [INFO] Activator:176 - 
+
+
+2026-04-08 12:17:41,292 [INFO] Activator:177 - !SESSION log4j initialized
+2026-04-08 12:17:44,442 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2026-04-08 12:39:15,082 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-08 12:39:15,084 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-08 12:39:15,085 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-08 12:39:15,085 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-08 12:39:15,085 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-08 13:00:01,801 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] StartTraceHandler.execute(), success : Collect=true

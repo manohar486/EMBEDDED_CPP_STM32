@@ -1,0 +1,8 @@
+../Src/main.c:26:7:USART3_IRQHandler	2
+../Src/main.c:36:5:main	2
+../Src/main.c:58:6:USART3_init	1
+../Src/main.c:89:6:USART3_write	3
+../Src/main.c:97:9:USART3_read	2
+../Src/main.c:104:6:USART3_string	2
+../Src/main.c:112:6:TIM2_init	1
+../Src/main.c:124:6:delaySec	3

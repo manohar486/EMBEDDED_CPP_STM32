@@ -1,0 +1,10 @@
+10:13:39 **** Incremental Build of configuration Debug for project fault_handlars ****
+make -j8 all 
+arm-none-eabi-size  fault_handlars.elf 
+   text	   data	    bss	    dec	    hex	filename
+   5568	     92	   1908	   7568	   1d90	fault_handlars.elf
+Finished building: default.size.stdout
+ 
+
+10:13:40 Build Finished. 0 errors, 0 warnings. (took 76ms)
+

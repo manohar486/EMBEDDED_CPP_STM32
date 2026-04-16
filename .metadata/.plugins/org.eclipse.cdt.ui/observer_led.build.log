@@ -1,0 +1,10 @@
+16:59:27 **** Incremental Build of configuration Debug for project observer_led ****
+make -j8 all 
+arm-none-eabi-size  observer_led.elf 
+   text	   data	    bss	    dec	    hex	filename
+   4680	     92	   1908	   6680	   1a18	observer_led.elf
+Finished building: default.size.stdout
+ 
+
+16:59:27 Build Finished. 0 errors, 0 warnings. (took 61ms)
+

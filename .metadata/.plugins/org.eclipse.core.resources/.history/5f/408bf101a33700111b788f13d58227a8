@@ -1,0 +1,157 @@
+#include<cstdint>
+#include"stm32f405xx.h"
+volatile uint8_t press_count;
+class observer
+{
+public:
+	virtual void update()=0;
+};
+
+void gpio_init()
+{
+	RCC->AHB1 |=(1U<<0);
+	RCC->AHB1 |=(1U<<3);
+
+	for(int i=12;i<16;i++)
+	{
+		GPIOD->MODER &=~(3u<<(i*2));
+		GPIOD->MODER |=(1U<<(i*2));
+	}
+
+}
+
+class subject
+{
+	uint8_t status;
+	uint8_t count;
+	observer *vect[10];
+	void notify()
+	{
+		for(int i=0;i<count;i++)
+			vect[i]->update();
+	}
+public:
+	subject():count(0){}
+
+	void attach(observer *obj)
+	{
+		if(count<10)
+			vect[count++]=obj;
+	}
+
+	void poll()
+	{
+
+		static volatile uint8_t prev_status=0;
+		status=read();
+		if(status==1 && prev_status==0)
+		{
+			press_count++;
+			notify();
+		}
+
+		prev_status=status;
+	}
+
+
+};
+
+
+class GreenLed:public observer
+{
+uint8_t pin;
+GPIO_TypeDef *port;
+public:
+GreenLed(GPIO_TypeDef *gpio,uint8_t p):pin(p),port(Gpio){}
+
+void update()
+{
+	if(press_count%2==0)
+	{
+		port->ODR |=(1U<<pin);
+	}else
+	{
+		port->ODR &=~(1U<<pin);
+	}
+}
+};
+
+class OrangeLed:public observer
+{
+uint8_t pin;
+GPIO_TypeDef *port;
+public:
+OrangeLed(GPIO_TypeDef *gpio,uint8_t p):pin(p),port(Gpio){}
+
+void update()
+{
+	if(press_count%2==0)
+	{
+		port->ODR |=(1U<<pin);
+	}else
+	{
+		port->ODR &=~(1U<<pin);
+	}
+}
+};
+
+class RedLed:public observer
+{
+uint8_t pin;
+GPIO_TypeDef *port;
+public:
+RedLed(GPIO_TypeDef *gpio,uint8_t p):pin(p),port(Gpio){}
+
+void update()
+{
+	if(press_count%2==0)
+	{
+		port->ODR |=(1U<<pin);
+	}else
+	{
+		port->ODR &=~(1U<<pin);
+	}
+}
+};
+
+class BlueLed:public observer
+{
+uint8_t pin;
+GPIO_TypeDef *port;
+public:
+BlueLed(GPIO_TypeDef *gpio,uint8_t p):pin(p),port(Gpio){}
+
+void update()
+{
+	if(press_count%2==0)
+	{
+		port->ODR |=(1U<<pin);
+	}else
+	{
+		port->ODR &=~(1U<<pin);
+	}
+}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,79 @@
+#include<cstdint>
+#include "stm32f405xx.h"
+
+class GPIOClockGuard
+{
+public:
+    GPIOClockGuard()
+    {
+        RCC->AHB1ENR |= (1U << 3); // Enable GPIOD
+        RCC->AHB1ENR |= (1U << 0); // Enable GPIOA
+
+    }
+
+    ~GPIOClockGuard()
+    {
+        RCC->AHB1ENR &= ~(1U << 3); // Disable GPIOD
+        RCC->AHB1ENR &= ~(1U << 0); // Disable GPIOA
+
+    }
+};
+
+
+class GPIO
+{
+public:
+    static void set_output(volatile std::uint32_t& moder, std::uint8_t pin)
+    {
+        moder &= ~(3U << (pin * 2));
+        moder |=  (1U << (pin * 2)); // Output mode
+    }
+
+    static void set_input(volatile std::uint32_t& moder, std::uint8_t pin)
+    {
+        moder &= ~(3U << (pin * 2)); // Input mode (00)
+    }
+
+    static void toggle(volatile std::uint32_t& odr, std::uint8_t pin)
+    {
+        odr ^= (1U << pin);
+    }
+
+    static bool read(volatile std::uint32_t& idr, std::uint8_t pin)
+    {
+        return (idr & (1U << pin));
+    }
+};
+
+// ==============================
+//  Delay
+// ==============================
+void delay()
+{
+    for (std::uint32_t i = 0; i < 100000; ++i)
+    {
+        // Prevent optimization
+    }
+}
+
+int main()
+{
+	GPIOClockGuard obj;
+
+	GPIO::set_output(GPIOD->MODER,12);
+	GPIO::set_input(GPIOA->MODER, 0);
+
+
+	while(true)
+	{
+
+		if(GPIO::read(GPIOA->IDR &(1<<0)))
+		{
+			break;
+		}
+
+	   GPIO::toggle(GPIOD->ODR, 12);
+	   delay();
+	}
+}
+

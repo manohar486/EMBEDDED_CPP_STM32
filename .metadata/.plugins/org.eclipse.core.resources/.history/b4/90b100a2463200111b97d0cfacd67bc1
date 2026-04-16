@@ -1,0 +1,125 @@
+#include <cstdint>
+#include "stm32f405xx.h"
+
+class GPIO
+{
+public:
+    static void enable_clock()
+    {
+        RCC->AHB1ENR |= (1U << 3);  // GPIOD
+        RCC->AHB1ENR |= (1U << 0);  // GPIOA
+    }
+
+    static void set_output(uint32_t pin)
+    {
+        GPIOD->MODER &= ~(3U << (pin * 2));
+        GPIOD->MODER |=  (1U << (pin * 2));
+    }
+
+    static void set_input(uint32_t pin)
+    {
+        GPIOA->MODER &= ~(3U << (pin * 2));
+
+        // pull-down (stable input)
+        GPIOA->PUPDR &= ~(3U << (pin * 2));
+        GPIOA->PUPDR |=  (2U << (pin * 2));
+    }
+
+    static void toggle(uint32_t pin)
+    {
+        GPIOD->ODR ^= (1U << pin);
+    }
+
+    static uint8_t read(uint32_t pin)
+    {
+        return (GPIOA->IDR & (1U << pin)) != 0;
+    }
+};
+
+
+class LED
+{
+public:
+    LED()
+    {
+        GPIO::set_output(12);
+        GPIO::set_output(13);
+        GPIO::set_output(14);
+        GPIO::set_output(15);
+
+        GPIO::set_input(0);
+    }
+
+    void Led_green_toggle()  { GPIO::toggle(12); }
+    void Led_orange_toggle() { GPIO::toggle(13); }
+    void Led_red_toggle()    { GPIO::toggle(14); }
+    void Led_blue_toggle()   { GPIO::toggle(15); }
+
+    uint8_t Switch_state()
+    {
+        return GPIO::read(0);
+    }
+};
+
+
+void delay()
+{
+    for (volatile uint32_t i = 0; i < 200000; i++);
+}
+
+
+int main()
+{
+    GPIO::enable_clock();
+
+    LED* L1 = new LED;
+
+    while (1)
+    {
+        L1->Led_green_toggle();
+
+        try
+        {
+            if (L1->Switch_state())
+            {
+                throw *L1;
+            }
+        }
+        catch (const uint8_t& e)
+        {
+            L1->Led_orange_toggle();
+            delay();
+            delete e;
+        }
+        catch (const uint16_t& e)
+        {
+            L1->Led_blue_toggle();
+            delay();
+            delete e;
+        }
+        catch (const uint32_t& e)
+        {
+            L1->Led_red_toggle();
+            delay();
+            delete e;
+        }
+        catch (const LED& e)
+        {
+
+            L1->Led_red_toggle();
+            L1->Led_blue_toggle();
+            L1->Led_orange_toggle();
+            delay();
+            delete e;
+        }
+        catch (...)
+        {
+
+            //L1->Led_green_toggle();
+
+            delay();
+        }
+
+        delay();
+    }
+}

@@ -1,0 +1,24 @@
+2026-04-01 07:01:33,551 [INFO] Activator:176 - 
+
+
+2026-04-01 07:01:33,557 [INFO] Activator:177 - !SESSION log4j initialized
+2026-04-01 07:01:41,098 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2026-04-01 07:01:48,795 [ERROR] ConfigurationRetriever:142 - IOException on connection: Read timed out
+2026-04-01 08:21:09,424 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:09,425 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:09,425 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:09,426 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:09,426 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:12,495 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:12,496 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:12,496 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:12,496 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 08:21:12,497 [ERROR] AdobePublisher:162 - Exception while opening the connection: java.net.SocketTimeoutException: Read timed out
+2026-04-01 12:57:35,279 [ERROR] ConfigurationRetriever:142 - IOException on connection: Read timed out
+2026-04-01 13:16:34,975 [INFO] Activator:176 - 
+
+
+2026-04-01 13:16:34,977 [INFO] Activator:177 - !SESSION log4j initialized
+2026-04-01 13:16:39,568 [INFO] LogOutputStream:77 - [STDOUT_REDIRECT] 
+2026-04-01 13:16:44,297 [ERROR] ConfigurationRetriever:142 - IOException on connection: Read timed out
+2026-04-01 22:15:54,338 [ERROR] LogOutputStream:75 - [STDERR_REDIRECT] SWT SessionManagerDBus: Failed to UnregisterClient: GDBus.Error:org.freedesktop.DBus.Error.NoReply: Message recipient disconnected from message bus without replying

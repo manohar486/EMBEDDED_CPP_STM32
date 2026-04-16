@@ -1,0 +1,17 @@
+../Src/main.cpp:5:6:void delay(uint32_t)	3
+../Src/main.cpp:10:6:void gpio_init()	2
+../Src/main.cpp:37:7:void subject::notify()	2
+../Src/main.cpp:43:2:subject::subject()	1
+../Src/main.cpp:45:7:void subject::attach(observer*)	2
+../Src/main.cpp:52:10:uint8_t subject::read()	1
+../Src/main.cpp:56:7:void subject::poll()	3
+../Src/main.cpp:24:7:constexpr observer::observer()	1
+../Src/main.cpp:81:1:GreenLed::GreenLed(GPIO_TypeDef*, uint8_t)	1
+../Src/main.cpp:83:7:virtual void GreenLed::update()	4
+../Src/main.cpp:100:2:OrangeLed::OrangeLed(GPIO_TypeDef*, uint8_t)	1
+../Src/main.cpp:102:7:virtual void OrangeLed::update()	4
+../Src/main.cpp:119:2:BlueLed::BlueLed(GPIO_TypeDef*, uint8_t)	1
+../Src/main.cpp:121:7:virtual void BlueLed::update()	2
+../Src/main.cpp:138:2:RedLed::RedLed(GPIO_TypeDef*, uint8_t)	1
+../Src/main.cpp:140:7:virtual void RedLed::update()	2
+../Src/main.cpp:155:5:int main()	1

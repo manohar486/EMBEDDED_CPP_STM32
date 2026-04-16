@@ -1,0 +1,111 @@
+#include <cstdint>
+#include "stm32f405xx.h"
+
+// ==============================
+// LED Enum
+// ==============================
+enum class led : uint8_t
+{
+    GREEN  = 12,
+    ORANGE = 13,
+    RED    = 14,
+    BLUE   = 15,
+};
+
+// ==============================
+// Clock Enable
+// ==============================
+class GPIOClockGuard
+{
+public:
+    GPIOClockGuard()
+    {
+        RCC->AHB1ENR |= (1U << 3); // GPIOD
+        RCC->AHB1ENR |= (1U << 0); // GPIOA
+    }
+};
+
+// ==============================
+// GPIO Driver
+// ==============================
+class GPIO
+{
+public:
+    static void set_output(volatile std::uint32_t& moder, uint8_t pin)
+    {
+        moder &= ~(3U << (pin * 2));
+        moder |=  (1U << (pin * 2));
+    }
+
+    static void set_input(volatile std::uint32_t& moder, uint8_t pin)
+    {
+        moder &= ~(3U << (pin * 2));
+    }
+
+    static void set_pullup(volatile std::uint32_t& pupdr, uint8_t pin)
+    {
+        pupdr &= ~(3U << (pin * 2));
+        pupdr |=  (1U << (pin * 2)); // Pull-up
+    }
+
+    // ✅ For enum class
+    static void toggle(GPIO_TypeDef* port, led pin)
+    {
+        uint8_t p = static_cast<uint8_t>(pin);
+
+        // Using BSRR (atomic)
+        if (port->ODR & (1U << p))
+            port->BSRR = (1U << (p + 16)); // Reset
+        else
+            port->BSRR = (1U << p);        // Set
+    }
+
+    static bool read(GPIO_TypeDef* port, uint8_t pin)
+    {
+        return (port->IDR & (1U << pin)) != 0;
+    }
+};
+
+// ==============================
+// Delay
+// ==============================
+void delay()
+{
+    for (volatile uint32_t i = 0; i < 100000; ++i);
+}
+
+// ==============================
+// Main
+// ==============================
+int main()
+{
+    GPIOClockGuard obj;
+
+    constexpr uint8_t SW = 0; // PA0
+
+    // LED Outputs
+    GPIO::set_output(GPIOD->MODER, static_cast<uint8_t>(led::GREEN));
+    GPIO::set_output(GPIOD->MODER, static_cast<uint8_t>(led::ORANGE));
+    GPIO::set_output(GPIOD->MODER, static_cast<uint8_t>(led::RED));
+    GPIO::set_output(GPIOD->MODER, static_cast<uint8_t>(led::BLUE));
+
+    // Button Input
+    GPIO::set_input(GPIOA->MODER, SW);
+    GPIO::set_pullup(GPIOA->PUPDR, SW); // ✅ important
+
+    while (true)
+    {
+        // ✅ Correct pin used (PA0)
+        if (GPIO::read(GPIOA, SW))
+        {
+            break;
+        }
+
+        GPIO::toggle(GPIOD, led::GREEN);
+        GPIO::toggle(GPIOD, led::ORANGE);
+        GPIO::toggle(GPIOD, led::RED);
+        GPIO::toggle(GPIOD, led::BLUE);
+
+        delay();
+    }
+}

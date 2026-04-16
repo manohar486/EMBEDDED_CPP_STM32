@@ -1,0 +1,7 @@
+../Src/main.cpp:25:5:USART::USART()	16	static
+../Src/main.cpp:28:19:static USART& USART::instance()	8	static,ignoring_inline_asm
+../Src/main.cpp:37:10:void USART::write_char(char)	16	static
+../Src/main.cpp:43:10:void USART::write_string(const char*)	16	static
+../Src/main.cpp:88:6:void gpio_init()	4	static
+../Src/main.cpp:98:6:void delay()	16	static
+../Src/main.cpp:103:5:int main()	16	static

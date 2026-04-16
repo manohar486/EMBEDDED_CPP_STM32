@@ -1,0 +1,7 @@
+16:59:25 **** Incremental Build of configuration Debug for project MI_RTOS_CPP_assig ****
+make -j8 all 
+arm-none-eabi-size  MI_RTOS_CPP_assig.elf 
+   text	   data	    bss	    dec	    hex	filename
+  41652	    480	  21688	  63820	   f94c	MI_RTOS_CPP_assig.elf
+Finished building: default.size.stdout
+ 
