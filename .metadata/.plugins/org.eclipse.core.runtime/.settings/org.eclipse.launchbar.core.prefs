@@ -1,14 +1,16 @@
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
 LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=linux
-configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_assig,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_Task,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_state Debug
+configDescList=org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_Task,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_assig,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_change_priority,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_state Debug,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_PA0_EXTI0,org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_send_receiver
 eclipse.preferences.version=1
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:AI_Project/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:AI_Project/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_Task/activeLaunchMode=run
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_Task/activeLaunchTarget=null\:---
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_assig/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_change_priority/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_CPP_state\ Debug/activeLaunchMode=debug
+org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:MI_RTOS_PA0_EXTI0/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:USART1/activeLaunchMode=debug
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:exception_hand/activeLaunchMode=run
 org.eclipse.cdt.dsf.gdb.gdbRemotedescriptorType\:fault_handlars/activeLaunchMode=debug
