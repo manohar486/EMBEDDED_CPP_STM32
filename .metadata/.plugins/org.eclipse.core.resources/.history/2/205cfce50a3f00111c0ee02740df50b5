@@ -1,0 +1,107 @@
+#include "lcd.h"
+
+// ---------- GPIO Helpers ----------
+void LCD::SetOutput(GPIO_TypeDef *gpio, uint32_t pin)
+{
+    gpio->MODER &= ~(3U << (pin * 2));
+    gpio->MODER |=  (1U << (pin * 2)); // Output
+}
+
+void LCD::SetBit(GPIO_TypeDef *gpio, uint32_t pin)
+{
+    gpio->BSRR = (1U << pin); // Set
+}
+
+void LCD::ClrBit(GPIO_TypeDef *gpio, uint32_t pin)
+{
+    gpio->BSRR = (1U << (pin + 16)); // Reset
+}
+
+// ---------- Delay ----------
+void LCD::delayms(uint32_t dly)
+{
+    for(uint32_t i = 0; i < dly * 16000; i++);
+}
+
+// ---------- EN Pulse ----------
+void LCD::pulseEnable()
+{
+    SetBit(PORT_EN, PIN_EN);
+    for(volatile int i = 0; i < 500; i++);
+    ClrBit(PORT_EN, PIN_EN);
+}
+
+// ---------- Send 4-bit ----------
+void LCD::send4bit(uint8_t data)
+{
+    (data & 0x01) ? SetBit(PORT_D4, PIN_D4) : ClrBit(PORT_D4, PIN_D4);
+    (data & 0x02) ? SetBit(PORT_D5, PIN_D5) : ClrBit(PORT_D5, PIN_D5);
+    (data & 0x04) ? SetBit(PORT_D6, PIN_D6) : ClrBit(PORT_D6, PIN_D6);
+    (data & 0x08) ? SetBit(PORT_D7, PIN_D7) : ClrBit(PORT_D7, PIN_D7);
+
+    pulseEnable();
+}
+
+// ---------- Command ----------
+void LCD::LCD_cmd(uint8_t cmd)
+{
+    ClrBit(PORT_RS, PIN_RS); // RS = 0
+
+    send4bit(cmd >> 4);
+    send4bit(cmd & 0x0F);
+
+    delayms(2);
+}
+
+// ---------- Constructor ----------
+LCD::LCD()
+{
+    RCC->AHB1ENR |= (1 << 0); // GPIOA
+    RCC->AHB1ENR |= (1 << 1); // GPIOB
+}
+
+// ---------- Init ----------
+void LCD::LCD_Init()
+{
+    // Set pins as output
+    SetOutput(PORT_RS, PIN_RS);
+    SetOutput(PORT_EN, PIN_EN);
+    SetOutput(PORT_D4, PIN_D4);
+    SetOutput(PORT_D5, PIN_D5);
+    SetOutput(PORT_D6, PIN_D6);
+    SetOutput(PORT_D7, PIN_D7);
+
+    delayms(20);
+
+    // 4-bit init sequence
+    send4bit(0x03); delayms(5);
+    send4bit(0x03); delayms(1);
+    send4bit(0x03);
+    send4bit(0x02); // 4-bit mode
+
+    LCD_cmd(0x28); // 2 line, 5x8
+    LCD_cmd(0x0C); // Display ON
+    LCD_cmd(0x01); // Clear
+    delayms(2);
+    LCD_cmd(0x06); // Entry mode
+}
+
+// ---------- Write Character ----------
+void LCD::LCD_write_char(char ch)
+{
+    SetBit(PORT_RS, PIN_RS); // RS = 1
+
+    send4bit(ch >> 4);
+    send4bit(ch & 0x0F);
+
+    delayms(2);
+}
+
+// ---------- Write String ----------
+void LCD::LCD_write_string(const char *str)
+{
+    while(*str)
+    {
+        LCD_write_char(*str++);
+    }
+}

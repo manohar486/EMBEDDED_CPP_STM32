@@ -1,0 +1,10 @@
+16:28:10 **** Incremental Build of configuration Debug for project MI_RTOS_PROJECT ****
+make -j8 all 
+arm-none-eabi-size  MI_RTOS_PROJECT.elf 
+   text	   data	    bss	    dec	    hex	filename
+  25612	    104	  21664	  47380	   b914	MI_RTOS_PROJECT.elf
+Finished building: default.size.stdout
+ 
+
+16:28:10 Build Finished. 0 errors, 0 warnings. (took 121ms)
+

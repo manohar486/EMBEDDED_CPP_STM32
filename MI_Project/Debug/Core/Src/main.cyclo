@@ -1,0 +1,6 @@
+../Core/Src/main.cpp:95:5:int main()	12
+../Core/Src/main.cpp:198:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:244:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:345:17:void HAL_GPIO_EXTI_Callback(uint16_t)	4
+../Core/Src/main.cpp:379:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:396:6:void Error_Handler()	1

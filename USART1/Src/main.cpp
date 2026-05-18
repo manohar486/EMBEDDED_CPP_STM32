@@ -35,7 +35,7 @@ int main()
 
 		USART1_write(ch);
 
-		//USART1_string("MANDA MANOHAR\n");
+		USART1_string("\nMANDA MANOHAR\n");
 		delay(200);
 	}
 
@@ -54,15 +54,15 @@ void USART1_init()
 	 GPIOB->MODER &=~(3U<<12);  //tx b6 so each bit two
 	 GPIOB->MODER |= (1U<<13); // set altrantive functionality
 
-	 GPIOB->AFR[0] &= ~(0xF<<24); // 6 & 7 so its low AFR each is four bits
-	 GPIOB->AFR[0]|= (0x7<<24); // afternative pin is AFR7 so set 0x7
+	 GPIOB->AFR[0] &= ~(0xF<<(6*4)); // 6 & 7 so its low AFR each is four bits
+	 GPIOB->AFR[0]|= (0x7<<(6*4)); // afternative pin is AFR7 so set 0x7
 
 	 //Rx setting
 	 GPIOB->MODER &=~(3U<<14);  //rx b7 so each bit two
 	 GPIOB->MODER |= (1U<<15); // set altrantive functionality
 
-	 GPIOB->AFR[0] &= ~(0xF<<28); // 6 & 7 so its low AFR each is four bits
-	 GPIOB->AFR[0] |= (0x7<<28);//AFR pin set AFR so set 0x7
+	 GPIOB->AFR[0] &= ~(0xF<<(7*4)); // 6 & 7 so its low AFR each is four bits
+	 GPIOB->AFR[0] |= (0x7<<(7*4));//AFR pin set AFR so set 0x7
 
 	  //usart1 settings
 

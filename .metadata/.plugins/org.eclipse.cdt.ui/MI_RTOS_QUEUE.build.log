@@ -1,0 +1,10 @@
+13:36:10 **** Incremental Build of configuration Debug for project MI_RTOS_QUEUE ****
+make -j8 all 
+arm-none-eabi-size  MI_RTOS_QUEUE.elf 
+   text	   data	    bss	    dec	    hex	filename
+  27380	    104	  21672	  49156	   c004	MI_RTOS_QUEUE.elf
+Finished building: default.size.stdout
+ 
+
+13:36:10 Build Finished. 0 errors, 0 warnings. (took 70ms)
+

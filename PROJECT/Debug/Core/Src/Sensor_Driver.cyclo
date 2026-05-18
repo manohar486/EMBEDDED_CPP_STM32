@@ -1,0 +1,3 @@
+../Core/Src/Sensor_Driver.cpp:16:7:virtual float TemperatureSensor::read(const ADC_data&)	1
+../Core/Src/Sensor_Driver.cpp:26:7:virtual float OxygenSensor::read(const ADC_data&)	3
+../Core/Src/Sensor_Driver.cpp:42:7:virtual float HeartrateSensor::read(const ADC_data&)	1

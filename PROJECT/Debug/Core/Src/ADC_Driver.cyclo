@@ -1,0 +1,2 @@
+../Core/Src/ADC_Driver.cpp:3:6:void ADC_class::ADC_init()	2
+../Core/Src/ADC_Driver.cpp:45:6:void ADC_class::ADC_read(ADC_data*)	4

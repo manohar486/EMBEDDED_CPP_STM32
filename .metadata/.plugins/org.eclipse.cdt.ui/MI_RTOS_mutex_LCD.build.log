@@ -1,0 +1,10 @@
+18:28:58 **** Incremental Build of configuration Debug for project MI_RTOS_mutex_LCD ****
+make -j8 all 
+arm-none-eabi-size  MI_RTOS_mutex_LCD.elf 
+   text	   data	    bss	    dec	    hex	filename
+  34612	    104	  21920	  56636	   dd3c	MI_RTOS_mutex_LCD.elf
+Finished building: default.size.stdout
+ 
+
+18:28:58 Build Finished. 0 errors, 0 warnings. (took 71ms)
+

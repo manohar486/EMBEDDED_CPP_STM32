@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;MI_RTOS_CAPTU_COLLi&apos; to &apos;MI_RTOS_Event_task&apos;" description="Rename resource &apos;MI_RTOS_CAPTU_COLLi&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="/MI_RTOS_CAPTU_COLLi" name="MI_RTOS_Event_task" stamp="1776400769454" updateReferences="true"/>
+</session>

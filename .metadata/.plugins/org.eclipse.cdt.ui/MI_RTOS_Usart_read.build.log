@@ -1,0 +1,10 @@
+09:57:49 **** Incremental Build of configuration Debug for project MI_RTOS_Usart_read ****
+make -j8 all 
+arm-none-eabi-size  MI_RTOS_Usart_read.elf 
+   text	   data	    bss	    dec	    hex	filename
+  33216	    116	  21676	  55008	   d6e0	MI_RTOS_Usart_read.elf
+Finished building: default.size.stdout
+ 
+
+09:57:49 Build Finished. 0 errors, 0 warnings. (took 124ms)
+

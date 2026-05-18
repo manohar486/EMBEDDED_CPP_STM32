@@ -1,0 +1,8 @@
+../Core/Src/RTOS_Task.cpp:22:6:static void DataAcquisitionTask::Task(void*)	1
+../Core/Src/RTOS_Task.cpp:39:6:static void SensorProcessingTask::Task(void*)	2
+../Core/Src/RTOS_Task.cpp:71:6:static void HealthMonitorTask::Task(void*)	15
+../Core/Src/RTOS_Task.cpp:132:6:static void DisplayTask::Task(void*)	2
+../Core/Src/RTOS_Task.cpp:176:6:static void ButtonHandlerTask::Task(void*)	4
+../Core/Src/RTOS_Task.cpp:211:6:static void AlertTask::Task(void*)	3
+../Core/Src/RTOS_Task.cpp:229:1:void __static_initialization_and_destruction_0()	1
+../Core/Src/RTOS_Task.cpp:229:1:cpp)	1

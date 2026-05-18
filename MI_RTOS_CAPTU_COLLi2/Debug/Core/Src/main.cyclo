@@ -1,0 +1,17 @@
+../Core/Src/main.cpp:116:6:void USART3_init()	1
+../Core/Src/main.cpp:141:6:void USART3_write(uint8_t)	3
+../Core/Src/main.cpp:148:6:void USART3_print(char*)	2
+../Core/Src/main.cpp:156:6:void delayMs(int)	3
+../Core/Src/main.cpp:163:5:int main()	10
+../Core/Src/main.cpp:267:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:311:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:444:6:void capture_task(void*)	1
+../Core/Src/main.cpp:461:6:void calibrate_task(void*)	7
+../Core/Src/main.cpp:486:6:void red_task(void*)	1
+../Core/Src/main.cpp:503:6:void ac_on_task(void*)	1
+../Core/Src/main.cpp:522:6:void orange_task(void*)	1
+../Core/Src/main.cpp:538:6:void ac_dec_task(void*)	1
+../Core/Src/main.cpp:557:6:void green_task(void*)	1
+../Core/Src/main.cpp:573:6:void ac_off_task(void*)	1
+../Core/Src/main.cpp:604:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:621:6:void Error_Handler()	1

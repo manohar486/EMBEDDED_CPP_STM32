@@ -1,0 +1,5 @@
+../Src/lcd.c:26:6:DelayLcd	2
+../Src/lcd.c:32:6:LcdInit	1
+../Src/lcd.c:50:6:LcdFxn	11
+../Src/lcd.c:112:6:lprint	3
+../Src/lcd.c:126:6:aprint	1

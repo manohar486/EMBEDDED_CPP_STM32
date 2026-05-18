@@ -1,0 +1,20 @@
+16:09:12 **** Incremental Build of configuration Debug for project MI_RTOS_GRP_SND_RECV ****
+make -j8 all 
+arm-none-eabi-g++ "../Core/Src/main.cpp" -mcpu=cortex-m4 -std=gnu++14 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../USB_HOST/App -I../USB_HOST/Target -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Host_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Host_Library/Class/CDC/Inc -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I../Middlewares/Third_Party/FreeRTOS/Source/include -I../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F -O0 -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti -fno-use-cxa-atexit -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.cpp:443:9: warning: "/*" within comment [-Wcomment]
+  443 |         /* Wait for button press */
+arm-none-eabi-g++ -o "MI_RTOS_GRP_SND_RECV.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/mirafra/STM32CubeIDE/workspace_2.1.1/MI_RTOS_GRP_SND_RECV/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MI_RTOS_GRP_SND_RECV.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+/opt/st/stm32cubeide_2.1.1/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.linux64_1.0.100.202602081740/tools/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld: warning: MI_RTOS_GRP_SND_RECV.elf has a LOAD segment with RWX permissions
+Finished building target: MI_RTOS_GRP_SND_RECV.elf
+ 
+arm-none-eabi-size  MI_RTOS_GRP_SND_RECV.elf 
+arm-none-eabi-objdump -h -S MI_RTOS_GRP_SND_RECV.elf  > "MI_RTOS_GRP_SND_RECV.list"
+   text	   data	    bss	    dec	    hex	filename
+  32880	    104	  21920	  54904	   d678	MI_RTOS_GRP_SND_RECV.elf
+Finished building: default.size.stdout
+ 
+Finished building: MI_RTOS_GRP_SND_RECV.list
+ 
+
+16:09:12 Build Finished. 0 errors, 2 warnings. (took 373ms)
+

@@ -1,0 +1,76 @@
+#include "header.h"
+
+void ADC_class::ADC_init()
+{
+
+    RCC->AHB1ENR |= (1<<2);
+
+    GPIOC->MODER &= ~((3<<0) | (3<<2) | (3<<4));   // clear PC0, PC1
+    GPIOC->MODER |=  ((3<<0) | (3<<2) | (3<<4));   // analog mode
+
+    RCC->APB2ENR |= (1<<8);
+
+    ADC->CCR &= ~(3<<16);   // PCLK2 / 2
+
+    ADC1->CR1 = 0;          // clear all settings
+    ADC1->CR2 = 0;
+
+    ADC1->CR1 |= (1<<8);
+
+    ADC1->CR2 &= ~(1<<1);
+
+    ADC1->CR2 |= (1<<10);
+
+    ADC1->SMPR1 |= (4<<6);  //CH12
+    ADC1->SMPR1 |= (4<<3);  // CH11
+    ADC1->SMPR1 |= (4<<0);  // CH10
+
+    ADC1->SQR1 &= ~(0xF<<20);
+    ADC1->SQR1 |= (2<<20);   // L = 1 → 2 conversions
+
+    ADC1->SQR3 = 0;
+
+    ADC1->SQR3 |= (10<<0);   // 1st → CH10 (PC0)
+    ADC1->SQR3 |= (11<<5);   // 2nd → CH11 (PC1)
+    ADC1->SQR3 |= (12<<10);   // 3rd → CH12 (PC2)
+
+
+    /* 14. Enable ADC */
+    ADC1->CR2 |= (1<<0);
+    for(volatile int i=0;i<1000;i++);  // small delay
+
+
+}
+
+void ADC_class::ADC_read(ADC_data *data)
+{
+    ADC1->CR2 |= (1<<30);
+
+    /* First conversion (CH10 - PC0) */
+    while(!(ADC1->SR & (1<<1)));
+    *data.ch10_tempsensor = ADC1->DR;
+
+    /* Second conversion (CH11 - PC1) */
+    while(!(ADC1->SR & (1<<1)));
+    *data.ch11_oxysensor = ADC1->DR;
+
+    /* Third conversion (CH12 - PC2) */
+    while(!(ADC1->SR & (1<<1)));
+    *data.ch12_HRsensor = ADC1->DR;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

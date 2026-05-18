@@ -1,0 +1,10 @@
+10:37:38 **** Incremental Build of configuration Debug for project ADC_SPI_EX2 ****
+make -j8 all 
+arm-none-eabi-size  ADC_SPI_EX2.elf 
+   text	   data	    bss	    dec	    hex	filename
+   1040	      0	   1576	   2616	    a38	ADC_SPI_EX2.elf
+Finished building: default.size.stdout
+ 
+
+10:37:38 Build Finished. 0 errors, 0 warnings. (took 65ms)
+

@@ -1,0 +1,10 @@
+../Core/Src/main.cpp:102:5:int main()	1
+../Core/Src/main.cpp:121:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:167:13:void MX_I2C1_Init()	2
+../Core/Src/main.cpp:201:13:void MX_I2S3_Init()	2
+../Core/Src/main.cpp:235:13:void MX_SPI1_Init()	2
+../Core/Src/main.cpp:273:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:383:6:void StartDefaultTask(void*)	1
+../Core/Src/main.cpp:404:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:417:13:void sensors_data_fetch(void*)	2
+../Core/Src/main.cpp:441:6:void Error_Handler()	1

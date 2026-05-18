@@ -1,0 +1,11 @@
+../Core/Inc/all_sensor.h:7:13:VitalSensor::~VitalSensor()	16	static
+../Core/Inc/all_sensor.h:7:13:virtual VitalSensor::~VitalSensor()	16	static
+../Core/Src/all_sensor.cpp:9:7:virtual float TemperatureSensor::read()	24	static
+../Core/Src/all_sensor.cpp:16:7:virtual float HeartRateSensor::read()	24	static
+../Core/Src/all_sensor.cpp:23:7:virtual float PulseOxiMeter::read()	24	static
+../Core/Inc/all_sensor.h:24:7:PulseOxiMeter::~PulseOxiMeter()	16	static
+../Core/Inc/all_sensor.h:24:7:virtual PulseOxiMeter::~PulseOxiMeter()	16	static
+../Core/Inc/all_sensor.h:17:7:HeartRateSensor::~HeartRateSensor()	16	static
+../Core/Inc/all_sensor.h:17:7:virtual HeartRateSensor::~HeartRateSensor()	16	static
+../Core/Inc/all_sensor.h:11:7:TemperatureSensor::~TemperatureSensor()	16	static
+../Core/Inc/all_sensor.h:11:7:virtual TemperatureSensor::~TemperatureSensor()	16	static

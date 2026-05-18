@@ -1,0 +1,10 @@
+17:48:56 **** Incremental Build of configuration Debug for project LCD_CHK ****
+make -j8 all 
+arm-none-eabi-size  LCD_CHK.elf 
+   text	   data	    bss	    dec	    hex	filename
+   1700	      0	   1568	   3268	    cc4	LCD_CHK.elf
+Finished building: default.size.stdout
+ 
+
+17:48:57 Build Finished. 0 errors, 0 warnings. (took 70ms)
+

@@ -28,6 +28,10 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="/home/mirafra/STM32CubeIDE/workspace_2.1.1/MI_RTOS_Project"/>
+			<item value="/home/mirafra/STM32CubeIDE/workspace_2.1.1/MI_Project"/>
+			<item value="/home/mirafra/STM32CubeIDE/workspace_2.1.1/PROJECT"/>
+			<item value="/home/mirafra/STM32CubeIDE/workspace_2.1.1/Counter_LCD"/>
 			<item value="/home/mirafra/STM32CubeIDE/workspace_2.1.1/MI_RTOS_PA0_EXTI0"/>
 			<item value="/home/mirafra/STM32CubeIDE/AI_Project"/>
 		</list>

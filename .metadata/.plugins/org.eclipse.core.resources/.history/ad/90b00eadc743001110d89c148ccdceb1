@@ -1,0 +1,147 @@
+/*
+ *
+ * LCD_Driver.cpp
+ *
+ *  Created on: 24-Apr-2026
+ *      Author: mirafra
+ */
+
+#include "header.h"
+void LCD::delay_ms(volatile int t)
+	{
+		for(int i=0;i<t*30000;i++);
+	}
+	void LCD::LCD_RS(int state)
+	{
+		if(state){    // rigister select 0-> cmd, 1-> data mode
+			GPIOB->ODR |= (1<<0);
+		}
+		else{
+				GPIOB->ODR &= ~(1<<0);
+			}
+	}
+	void LCD::LCD_EN()
+	{
+			GPIOB->ODR |= (1<<1);   // output mode
+			for(volatile int i=0;i<2000;i++);
+			GPIOB->ODR &= ~(1<<1);
+			for(volatile int i=0;i<2000;i++);
+	}
+	void LCD::lcd_send(uint8_t data)
+	{
+	    GPIOB->ODR &= ~(0xF<<4);
+	    GPIOB->ODR |= ((data &0x0F)<<4);
+
+	    LCD_EN();
+	}
+	void LCD::lcd_contrl()
+	{
+
+		RCC->AHB1ENR |= (1<<1);  // GPIOB
+		GPIOB->MODER &= ~(3<<(0*2)); // Rs
+		GPIOB->MODER |=  (1<<(0*2)); // output
+
+		GPIOB->MODER &= ~(3<<(1*2)); // EN
+		GPIOB->MODER |=  (1<<(1*2)); // output
+
+		GPIOB->MODER &= ~(3<<(4*2)); // D4
+		GPIOB->MODER |=  (1<<(4*2)); // output
+
+		GPIOB->MODER &= ~(3<<(5*2)); // D5
+		GPIOB->MODER |=  (1<<(5*2)); // output
+
+		GPIOB->MODER &= ~(3<<(6*2)); // D6
+		GPIOB->MODER |=  (1<<(6*2)); // output
+
+		GPIOB->MODER &= ~(3<<(7*2)); // D7
+		GPIOB->MODER |=  (1<<(7*2)); // output
+
+		GPIOB->OTYPER = 0;
+		GPIOB->OSPEEDR |= 0xFFFF;
+	}
+
+	void LCD::LCD_SendByte(int data,int isdata)
+	{
+		LCD::LCD_RS(isdata);
+
+		LCD::lcd_send(data >> 4);   // upper nibble
+		delay_ms(1);
+
+		lcd_send(data & 0x0F); // lower nibble
+		delay_ms(1);
+	}
+ void LCD::LCD_Init()
+	{
+	    lcd_contrl();
+
+	    delay_ms(40);
+
+	    LCD_RS(0);
+
+	    lcd_send(0x03);
+	    delay_ms(5);
+
+	    lcd_send(0x03);
+	    delay_ms(5);
+
+	    lcd_send(0x03);
+	    delay_ms(2);
+
+	    lcd_send(0x02);   // enter 4-bit mode
+	    delay_ms(2);
+
+	    LCD_SendByte(0x28,0); // 4-bit,2 line
+	    LCD_SendByte(0x0C,0); // display ON
+	    LCD_SendByte(0x06,0); // entry mode
+	    LCD_SendByte(0x01,0); // clear
+
+	    delay_ms(5);
+	}
+	void LCD:: set_cursor(int row,int col)
+	{
+		int addr;
+
+		if(row==0)
+			addr = 0x80 + col;   // select  0 row  0x80 is starting address of 0 row
+		else
+			addr = 0xC0 + col;  // select 1 row 0xc0 is starting address of 1 row
+
+		LCD_SendByte(addr,0);
+	}
+	void LCD::write_string(const char* str)
+	{
+		while(*str){
+			LCD_SendByte(*str,1);
+			str++;
+		}
+	}
+
+	void LCD::write_num(uint32_t num)
+	{
+		if(num==0)
+		    {
+		        LCD_SendByte('0',1);
+		        return;
+		    }
+
+		int i=0;
+
+	   char str[12];
+	   while(num)
+	   {
+		   int r=num%10;
+		   str[i++]=r+'0';
+		   num=num/10;
+	   }
+
+	   for(int j=i-1;j>=0;j--)
+		   LCD_SendByte(str[j],1);
+	}
+
+
+
+
+
+
+
+

@@ -1,0 +1,16 @@
+#include<cstdint>
+#include"stm32f405xx.h"
+#include "lcd.h"
+
+int main()
+{
+	LCD obj;
+	obj.LCD_Init();
+
+
+		obj.LCD_write_string("MANOHAR\r\n");
+
+while(1);
+}
+
+

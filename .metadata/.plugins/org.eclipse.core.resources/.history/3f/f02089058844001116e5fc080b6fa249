@@ -1,0 +1,213 @@
+/*
+ * header.h
+ *
+ *  Created on: 23-Apr-2026
+ *      Author: mirafra
+ */
+
+#ifndef INC_HEADER_H_
+#define INC_HEADER_H_
+
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "main.h"
+#include "stdio.h"
+#include "semphr.h"
+#include "event_groups.h"
+
+
+
+//extern SemaphoreHandle_t lcdMutex;
+
+typedef struct
+{
+	uint32_t ch12_HRsensor;
+	uint32_t ch13_oxysensor;
+	uint32_t ch10_tempsensor;
+} ADC_data;
+
+typedef struct
+{
+	uint32_t temp;
+	uint32_t oxygen;
+	uint32_t heartrate;
+}Sensor_data;
+
+typedef struct
+{
+     uint8_t temp;
+     uint8_t spo2;
+     uint8_t hr;
+
+     uint8_t alertLevel;
+} ICU_Data;
+
+
+
+extern QueueHandle_t adcQueue;
+extern QueueHandle_t sensorQueue;
+extern QueueHandle_t buttonQueue;
+
+extern TaskHandle_t alert_handle;
+
+extern EventGroupHandle_t icuEvent;
+extern SemaphoreHandle_t lcdMutex ;
+extern SemaphoreHandle_t usartMutex;
+
+
+class ADC_class
+{
+
+public:
+	void ADC_init();
+	void ADC_read(ADC_data *data);
+};
+
+class USART_class
+{
+public:
+	static void USART2_init();
+	void USART2_write(uint8_t ch);
+	uint8_t USART2_read();
+	void USART2_string(const char* str);
+	void USART2_read_string(char *buffer, uint16_t maxLen);
+};
+
+class GPIO_class
+{
+private:
+	uint32_t pin;
+public:
+	GPIO_class(uint32_t gpiopin);
+	void GPIO_init();
+	void LED_On();
+	void LED_Off();
+	void LED_Toggle();
+};
+
+class LCD
+{
+private:
+    void delay_ms(volatile int t);
+    void LCD_RS(int state);
+    void LCD_EN();
+    void lcd_send(uint8_t data);
+    bool initialized=false;
+
+public:
+    void lcd_contrl();
+    void LCD_SendByte(int data,int isdata);
+    void LCD_Init();
+    void set_cursor(int row,int col);
+    void write_string(const char* str);
+    void write_num(uint32_t num);
+};
+
+
+class Buzzer_class
+{
+public:
+	void buzzer_init();
+	void delay(uint32_t d);
+	void beep_low();
+	void beep_medium();
+	void beep_high();
+};
+
+class Vital_Sensor {
+public:
+virtual float read(const ADC_data &data) =0;
+};
+
+class TemperatureSensor: public Vital_Sensor
+{
+public:
+	float read(const ADC_data &data) override;
+};
+
+class OxygenSensor: public Vital_Sensor
+{
+public:
+	float read(const ADC_data &data) override;
+};
+
+class HeartrateSensor: public Vital_Sensor
+{
+public:
+	float read(const ADC_data &data) override;
+};
+
+class PatientDetailsTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+class DataAcquisitionTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+class SensorProcessingTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+class HealthMonitorTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+class DisplayTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+class ButtonHandlerTask
+{
+public:
+	static void Task(void* parameters);
+};
+//
+class AlertTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+class DebugTask
+{
+public:
+	static void Task(void* parameters);
+};
+
+
+
+#endif /* INC_HEADER_H_ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

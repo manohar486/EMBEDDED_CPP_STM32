@@ -1,0 +1,10 @@
+16:38:26 **** Incremental Build of configuration Debug for project Counter_LCD ****
+make -j8 all 
+arm-none-eabi-size  Counter_LCD.elf 
+   text	   data	    bss	    dec	    hex	filename
+   4380	     88	   1896	   6364	   18dc	Counter_LCD.elf
+Finished building: default.size.stdout
+ 
+
+16:38:26 Build Finished. 0 errors, 0 warnings. (took 69ms)
+

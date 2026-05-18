@@ -1,0 +1,403 @@
+/*
+ * RTOS_Task.cpp
+ *
+ *  Created on: 24-Apr-2026
+ *      Author: mirafra
+ */
+#include "header.h"
+#include <cstring>
+
+#define DISPLAY_BIT   (1 << 0)
+#define ALERT_BIT     (1 << 2)
+#define DEBUG_BIT     (1 << 1)
+
+#define ALERT_NURSE   (1 << 0)
+#define ALERT_EMERGENCY (1 << 1)
+
+ //object for adc class
+ADC_data data;
+LCD lcd;
+
+//USART_class usart;
+ICU_Data latestData;
+
+QueueHandle_t adcQueue = NULL;
+QueueHandle_t sensorQueue = NULL;
+QueueHandle_t buttonQueue = NULL;
+
+TaskHandle_t alert_handle = NULL;
+
+EventGroupHandle_t icuEvent = NULL;
+SemaphoreHandle_t lcdMutex = NULL;
+
+//SemaphoreHandle_t usartMutex = NULL;
+
+void DataAcquisitionTask::Task(void *parameters)
+{
+    ADC_class adc;
+    //HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_12);
+
+    adc.ADC_init();
+
+
+    	while(1)
+    	{
+    	   adc.ADC_read(&data);
+
+    	   xQueueOverwrite(adcQueue,&data);
+
+    	   vTaskDelay(pdMS_TO_TICKS(100));
+    	}
+
+}
+
+
+void SensorProcessingTask::Task(void* parameters)
+{
+	TemperatureSensor Tsensor;
+	Vital_Sensor *ptr1 = &Tsensor;
+
+	OxygenSensor Osensor;
+	Vital_Sensor *ptr2 = &Osensor;
+
+	HeartrateSensor HRsensor;
+	Vital_Sensor *ptr3 = &HRsensor;
+
+	ADC_data value;
+	Sensor_data sensor;
+	//HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);
+
+	while(1)
+	{
+		if(xQueueReceive(adcQueue, &value, portMAX_DELAY)==pdTRUE)
+		{
+
+			sensor.temp = ptr1->read(value);
+
+			sensor.oxygen = ptr2->read(value);
+
+			sensor.heartrate = ptr3->read(value);
+
+			xQueueOverwrite(sensorQueue,&sensor);
+		}
+
+	}
+}
+
+
+void HealthMonitorTask::Task(void* parameters)
+{
+	Sensor_data sensor;
+	 ICU_Data tempData;
+
+
+	while(1)
+	{
+       if(xQueueReceive(sensorQueue, &sensor, portMAX_DELAY))
+		{
+			tempData.temp = sensor.temp;
+			tempData.spo2 = sensor.oxygen;
+			tempData.hr = sensor.heartrate;
+
+			//HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);
+			/* TEMPERATURE OF BODY */
+			if((sensor.temp >104 || sensor.temp <=82) /*|| (sensor.oxygen  <90) */|| (sensor.heartrate>120 || sensor.heartrate <50))
+			{
+				tempData.alertLevel=3;  //critical
+			}
+			else if((sensor.temp <95 || sensor.temp >99) || (sensor.oxygen >= 92 && sensor.oxygen < 95)  || (sensor.heartrate>100))
+			{
+				tempData.alertLevel=2;  //warning
+			}
+			else
+			{
+				tempData.alertLevel=1;  //normal
+			}
+
+			taskENTER_CRITICAL();
+			latestData = tempData;
+			taskEXIT_CRITICAL();
+
+			if(tempData.alertLevel == 3)
+			{
+			    xEventGroupSetBits(icuEvent, DISPLAY_BIT | ALERT_BIT );
+			    //xEventGroupSetBits(icuEvent, DISPLAY_BIT);
+			}
+			else if(tempData.alertLevel == 2)
+
+			{
+			    xEventGroupSetBits(icuEvent, DISPLAY_BIT | ALERT_BIT);
+			    //xEventGroupSetBits(icuEvent, DISPLAY_BIT);
+			}
+			else
+			{
+			    xEventGroupSetBits(icuEvent, DISPLAY_BIT);
+			}
+
+		}
+	}
+}
+
+
+
+
+
+void DisplayTask::Task(void *p)
+{
+    // Initialize LCD after scheduler starts (safe timing now)
+    vTaskDelay(pdMS_TO_TICKS(100));
+
+    lcd.LCD_Init();
+    vTaskDelay(pdMS_TO_TICKS(50));
+
+    lcd.LCD_SendByte(0x01, 0);  // Clear display
+    vTaskDelay(pdMS_TO_TICKS(20));
+
+    lcd.set_cursor(0, 0);
+    lcd.write_string("ICU MONITOR");
+
+    while(1)
+    {
+        // Wait for display event from HealthMonitorTask
+        if(xEventGroupWaitBits(icuEvent, DISPLAY_BIT, pdTRUE, pdFALSE, portMAX_DELAY))
+        {
+            // Take mutex before accessing LCD
+            if(xSemaphoreTake(lcdMutex, portMAX_DELAY) == pdTRUE)
+            {
+                // Get the latest sensor data (already set by HealthMonitorTask)
+                taskENTER_CRITICAL();
+                ICU_Data icu = latestData;
+                taskEXIT_CRITICAL();
+
+                // Clear and display based on alert level
+                lcd.LCD_SendByte(0x01, 0);  // Clear
+                vTaskDelay(pdMS_TO_TICKS(20));
+
+                if(icu.alertLevel==1)
+                {
+                			                lcd.set_cursor(0,0);
+                			                lcd.write_string("HR: ");
+                			                lcd.write_num((uint32_t)icu.hr);
+                			                lcd.write_string(" SPo2: ");
+                			                lcd.write_num((uint32_t)icu.spo2);
+
+
+
+                			                lcd.set_cursor(1,0);
+                			                lcd.write_string("TEMP: ");
+                			                lcd.write_num((uint32_t)icu.temp);
+                			                lcd.write_string(" OK");
+
+                			                HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET);
+                }
+                 //reading are some what better
+               else if(icu.alertLevel==2)
+               {
+                			               HAL_GPIO_WritePin(GPIOD,GPIO_PIN_13,GPIO_PIN_SET);
+
+                			                lcd.set_cursor(0,0);
+
+                			                if(icu.temp <95 || icu.temp >99)
+                			                {
+                			                    lcd.write_string("TEMP ABNORMAL");
+                			                    lcd.set_cursor(1,0);
+
+                			                    if(icu.temp>99)
+                			                        lcd.write_string("HIGH TEMP");
+                			                    else
+                			                        lcd.write_string("LOW TEMP");
+                			                }
+
+                			                else if(icu.spo2 <95)
+                			                {
+                			                    lcd.write_string("OXYGEN LOW");
+                			                    lcd.set_cursor(1,0);
+
+                			                    lcd.write_string("Spo2: ");
+                			                    lcd.write_num(icu.spo2);
+                			                }
+
+                			                else if(icu.hr >100 || icu.hr <60)
+                			                {
+                			                    lcd.write_string("HR ABNORMAL");
+                			                    lcd.set_cursor(1,0);
+
+                			                    if(icu.hr>100)
+                			                       lcd.write_string("HIGH HEART RT");
+                			                    else
+                			                       lcd.write_string("LOW HEART RT");
+                			             }
+
+                 }
+                else if(icu.alertLevel == 3	)
+                {
+                    // Critical
+                    lcd.set_cursor(0, 0);
+                    lcd.write_string("EMERGENCY!");
+
+                    lcd.set_cursor(1, 0);
+                    lcd.write_string("CALL NURSE NOW");
+
+                    HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);  // Red LED
+                }
+
+                // Release mutex
+                xSemaphoreGive(lcdMutex);
+            }
+
+            vTaskDelay(pdMS_TO_TICKS(500));
+        }
+    }
+}
+
+
+
+void ButtonHandlerTask::Task(void* parameters)
+{
+	uint32_t button_id;
+
+	while(1)
+	{
+
+	 if (xQueueReceive(buttonQueue, &button_id, portMAX_DELAY))
+	 {
+		 //HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+
+			 xSemaphoreTake(lcdMutex, portMAX_DELAY);
+
+
+			 lcd.LCD_Init();
+			     vTaskDelay(pdMS_TO_TICKS(50));
+
+			     lcd.LCD_SendByte(0x01, 0);  // Clear display
+			     vTaskDelay(pdMS_TO_TICKS(20));
+
+			     lcd.set_cursor(0, 0);
+
+			 if(button_id==1)
+			 {
+				 lcd.write_string("Nurse Ack");
+				 xTaskNotify(alert_handle, ALERT_NURSE, eSetValueWithOverwrite);
+
+			 }
+
+			 else if(button_id==2)
+			 {
+				 lcd.write_string("Emergency");
+				 xTaskNotify(alert_handle, ALERT_EMERGENCY, eSetValueWithOverwrite);
+
+			 }
+
+			 xSemaphoreGive(lcdMutex);
+
+			 vTaskDelay(pdMS_TO_TICKS(2000));
+		 }
+	}
+}
+
+//
+void AlertTask::Task(void* parameters)
+{
+	uint32_t value;
+	Buzzer_class buz;
+	buz.buzzer_init();
+	while(1)
+	{
+		xTaskNotifyWait(0, 0xFFFFFFFF, &value, 0);
+
+		if(value==ALERT_NURSE)
+		{
+			buz.beep_low();
+		}
+		else if(value==ALERT_NURSE || value==ALERT_BIT)
+		{
+			buz.beep_high();
+		}
+	}
+}
+
+//
+//void DebugTask::Task(void* parameters)
+//{
+//	char buffer[50];
+//	ICU_Data icu;
+//	usart.USART2_init();
+//
+//	while(1)
+//	{
+//		xEventGroupWaitBits(icuEvent, DEBUG_BIT, pdTRUE, pdFALSE, portMAX_DELAY);
+//
+//		taskENTER_CRITICAL();
+//		icu = latestData;
+//		taskEXIT_CRITICAL();
+//		xSemaphoreTake(usartMutex, portMAX_DELAY);
+//
+//		usart.USART2_string("\r\n=========================================\r\n");
+//		usart.USART2_string("Body temperature = ");
+//		sprintf(buffer, " %d\r\n", icu.temp);
+//		usart.USART2_string(buffer);
+//
+//		usart.USART2_string("Oxygen in Blood = ");
+//		sprintf(buffer, " %d\r\n", icu.spo2);
+//		usart.USART2_string(buffer);
+//
+//		usart.USART2_string("Heart rate = ");
+//		sprintf(buffer, " %d\r\n", icu.hr);
+//		usart.USART2_string(buffer);
+//
+//		if(icu.alertLevel == 3)
+//		{
+//			usart.USART2_string(" \r\nEMERGENCY ALERT!! ");
+//
+//			if(icu.temp > 104 || icu.temp < 82 )
+//			{
+//				usart.USART2_string("\r\n Body temperature is abnormal ");
+//			}
+//
+//			if(icu.spo2 <90)
+//			{
+//				usart.USART2_string(" \r\nOxygen rate is abnormal ");
+//			}
+//
+//			if((icu.hr <50 )||(icu.hr > 120))
+//			{
+//				usart.USART2_string(" \r\nHeart rate of patient is abnormal ");
+//			}
+//
+//			usart.USART2_string(" \r\nCHECK THE PATIENT ");
+//		}
+//
+//		else if(icu.alertLevel == 2)
+//		{
+//			usart.USART2_string(" \r\nWARNING ALERT!! ");
+//
+//			if(icu.temp > 100 && icu.temp <=104 )
+//			{
+//				usart.USART2_string("\r\n Body temperature is varying ");
+//			}
+//
+//			if(icu.spo2 <95)
+//			{
+//				usart.USART2_string(" \r\nOxygen rate is varying ");
+//			}
+//
+//			if((icu.hr <60 )||(icu.hr > 100))
+//			{
+//				usart.USART2_string(" \r\nHeart rate of patient is varying ");
+//			}
+//
+//			usart.USART2_string(" \r\nCHECK THE PATIENT ");
+//		}
+//		else
+//		{
+//			usart.USART2_string(" \r\n Everything is fine ");
+//		}
+//
+//		xSemaphoreGive(usartMutex);
+//
+//		vTaskDelay(pdMS_TO_TICKS(2000));
+//
+//	}
+//}
+
+

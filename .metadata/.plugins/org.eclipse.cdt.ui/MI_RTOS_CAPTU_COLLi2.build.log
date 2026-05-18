@@ -1,0 +1,10 @@
+10:44:31 **** Incremental Build of configuration Debug for project MI_RTOS_CAPTU_COLLi2 ****
+make -j8 all 
+arm-none-eabi-size  MI_RTOS_CAPTU_COLLi2.elf 
+   text	   data	    bss	    dec	    hex	filename
+  34448	    116	  21692	  56256	   dbc0	MI_RTOS_CAPTU_COLLi2.elf
+Finished building: default.size.stdout
+ 
+
+10:44:31 Build Finished. 0 errors, 0 warnings. (took 72ms)
+

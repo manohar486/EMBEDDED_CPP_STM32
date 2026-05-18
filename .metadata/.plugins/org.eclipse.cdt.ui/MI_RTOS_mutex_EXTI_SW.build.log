@@ -1,0 +1,17 @@
+13:09:48 **** Build of configuration Debug for project MI_RTOS_mutex_EXTI_SW ****
+make -j8 all 
+arm-none-eabi-g++ -o "MI_RTOS_mutex_EXTI_SW.elf" @"objects.list"   -mcpu=cortex-m4 -T"/home/mirafra/STM32CubeIDE/workspace_2.1.1/MI_RTOS_mutex_EXTI_SW/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MI_RTOS_mutex_EXTI_SW.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+/opt/st/stm32cubeide_2.1.1/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.14.3.rel1.linux64_1.0.100.202602081740/tools/bin/../lib/gcc/arm-none-eabi/14.3.1/../../../../arm-none-eabi/bin/ld: warning: MI_RTOS_mutex_EXTI_SW.elf has a LOAD segment with RWX permissions
+Finished building target: MI_RTOS_mutex_EXTI_SW.elf
+ 
+arm-none-eabi-size  MI_RTOS_mutex_EXTI_SW.elf 
+arm-none-eabi-objdump -h -S MI_RTOS_mutex_EXTI_SW.elf  > "MI_RTOS_mutex_EXTI_SW.list"
+   text	   data	    bss	    dec	    hex	filename
+  49164	    136	  22968	  72268	  11a4c	MI_RTOS_mutex_EXTI_SW.elf
+Finished building: default.size.stdout
+ 
+Finished building: MI_RTOS_mutex_EXTI_SW.list
+ 
+
+13:09:49 Build Finished. 0 errors, 1 warnings. (took 586ms)
+

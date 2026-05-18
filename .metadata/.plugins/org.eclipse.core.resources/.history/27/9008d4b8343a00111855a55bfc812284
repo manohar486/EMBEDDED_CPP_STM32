@@ -1,0 +1,214 @@
+#include<cstdint>
+#include<stdio.h>
+
+
+/* ---------------- GPIO STRUCT ---------------- */
+struct GPIO_TypeDef
+{
+    volatile uint32_t MODER;
+    volatile uint32_t OTYPER;
+    volatile uint32_t OSPEEDR;
+    volatile uint32_t PUPDR;
+    volatile uint32_t IDR;
+    volatile uint32_t ODR;
+    volatile uint32_t BSRR;
+};
+
+/* ---------------- BASE ADDRESSES ---------------- */
+#define GPIOA ((GPIO_TypeDef*)0x40020000)
+#define GPIOD ((GPIO_TypeDef*)0x40020C00)
+
+#define RCC_AHB1ENR (*(volatile uint32_t*)0x40023830)
+
+/* ---------------- OBSERVER INTERFACE ---------------- */
+class ButtonObserver
+{
+public:
+    virtual void onButtonPressed() = 0;
+};
+
+/* ---------------- SUBJECT (BUTTON) ---------------- */
+class Button
+{
+    GPIO_TypeDef* port;
+    uint16_t pin;
+
+    ButtonObserver* observers[10];
+    int count;
+
+public:
+    Button(GPIO_TypeDef* p, uint16_t pin)
+        : port(p), pin(pin), count(0) {}
+
+    void attach(ButtonObserver* obs)
+    {
+        if(count < 10)
+            observers[count++] = obs;
+    }
+
+    int read()
+    {
+        return (port->IDR & pin) ? 1 : 0;
+    }
+
+    void poll()
+    {
+        static int last_state = 0;
+
+        int current = read();
+
+        // Rising edge detection
+        if(current == 1 && last_state == 0)
+        {
+            notify();
+        }
+
+        last_state = current;
+    }
+
+private:
+    void notify()
+    {
+        for(int i = 0; i < count; i++)
+        {
+            observers[i]->onButtonPressed();
+        }
+    }
+};
+
+/* ---------------- LED OBSERVER ---------------- */
+class LEDGREEN: public ButtonObserver
+{
+    GPIO_TypeDef* port;
+    uint16_t pin;
+
+public:
+    LEDGREEN(GPIO_TypeDef* p, uint16_t pin)
+        : port(p), pin(pin) {
+
+    	printf("Green Led get notification\n");
+    }
+
+    void onButtonPressed() override
+    {
+        if(port->ODR & pin)
+        {
+            port->BSRR = (pin << 16);  // Reset
+        }
+        else
+        {
+            port->BSRR = pin;          // Set
+        }
+    }
+};
+class LEDORANGE: public ButtonObserver
+{
+    GPIO_TypeDef* port;
+    uint16_t pin;
+
+public:
+    LEDORANGE(GPIO_TypeDef* p, uint16_t pin)
+        : port(p), pin(pin) {
+
+    	printf("Orange Led Get Notification\n");
+    }
+
+    void onButtonPressed() override
+    {
+    	while(true)
+    	{
+    		port->ODR ^=(1U<<pin);
+    		for(uint32_t i=0;i<300000;i++);
+    	}
+    }
+};
+class LEDRED : public ButtonObserver
+{
+    GPIO_TypeDef* port;
+    uint16_t pin;
+
+public:
+    LEDRED(GPIO_TypeDef* p, uint16_t pin)
+        : port(p), pin(pin) {
+    	printf("Red Led Get Notification\n");
+    }
+
+    void onButtonPressed() override
+    {
+        while(true)
+        {
+        	port->ODR ^= (1U<<pin);
+        	for(uint32_t i=0;i<300000;i++);
+        }
+    }
+};
+class LEDBLUE : public ButtonObserver
+{
+    GPIO_TypeDef* port;
+    uint16_t pin;
+
+public:
+    LEDBLUE(GPIO_TypeDef* p, uint16_t pin)
+        : port(p), pin(pin) {
+    	printf("Blue Led Get Notification\n");
+    }
+
+    void onButtonPressed() override
+    {
+        if(port->ODR & pin)
+        {
+            port->BSRR = (pin << 16);  // Reset
+        }
+        else
+        {
+            port->BSRR = pin;          // Set
+        }
+    }
+};
+
+/* ---------------- GPIO INIT ---------------- */
+void GPIO_Init()
+{
+    // Enable GPIOA and GPIOD clock
+    RCC_AHB1ENR |= (1 << 0); // GPIOA
+    RCC_AHB1ENR |= (1 << 3); // GPIOD
+
+    // PA0 → input
+    GPIOA->MODER &= ~(3 << (0 * 2));
+
+    // PD12–PD15 → output
+    for(int i = 12; i <=15; i++)
+    {
+        GPIOD->MODER &= ~(3 << (i * 2));
+        GPIOD->MODER |=  (1 << (i * 2));
+    }
+}
+
+/* ---------------- MAIN ---------------- */
+int main()
+{
+    GPIO_Init();
+
+    // Subject
+    Button button(GPIOA, (1 << 0));  // PA0
+
+    // Observers (LEDs)- 4 objs
+    LEDGREEN led1(GPIOD, (1 << 12));
+    LEDORANGE led2(GPIOD, (1 << 13));
+    LEDRED led3(GPIOD, (1 << 14));
+    LEDBLUE led4(GPIOD, (1 << 15));
+
+    // Attach observers
+    button.attach(&led1);
+    button.attach(&led2);
+    button.attach(&led3);
+    button.attach(&led4);
+
+    while(1)
+    {
+        button.poll();
+
+        // Small delay (basic debounce)
+        for(volatile int i = 0; i < 100000; i++);
+    }
+}

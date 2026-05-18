@@ -1,0 +1,11 @@
+../Core/Src/main.cpp:89:5:int main()	3
+../Core/Src/main.cpp:150:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:194:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:327:6:void USART3_init()	1
+../Core/Src/main.cpp:351:6:void USART3_write(uint8_t)	3
+../Core/Src/main.cpp:358:6:void USART3_write_string(const char*)	2
+../Core/Src/main.cpp:365:6:void USART3_write_number(uint32_t)	4
+../Core/Src/main.cpp:384:13:void Temperature_Task(void*)	7
+../Core/Src/main.cpp:427:13:void Fuel_Task(void*)	5
+../Core/Src/main.cpp:477:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:494:6:void Error_Handler()	1

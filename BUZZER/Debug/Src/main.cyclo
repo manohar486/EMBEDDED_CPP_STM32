@@ -1,0 +1,6 @@
+../Src/main.cpp:6:6:void buzzer_init()	1
+../Src/main.cpp:12:6:void delay(uint32_t)	2
+../Src/main.cpp:17:6:void beep_low()	1
+../Src/main.cpp:24:6:void beep_medium()	1
+../Src/main.cpp:31:6:void beep_high()	2
+../Src/main.cpp:41:5:int main()	5

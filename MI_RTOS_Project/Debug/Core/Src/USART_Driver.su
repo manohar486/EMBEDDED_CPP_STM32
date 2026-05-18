@@ -1,0 +1,4 @@
+../Core/Src/USART_Driver.cpp:8:6:void USART_class::USART2_init()	16	static
+../Core/Src/USART_Driver.cpp:32:6:void USART_class::USART2_write(uint8_t)	16	static
+../Core/Src/USART_Driver.cpp:40:9:uint8_t USART_class::USART2_read()	16	static
+../Core/Src/USART_Driver.cpp:47:6:void USART_class::USART2_string(const char*)	16	static

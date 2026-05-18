@@ -1,0 +1,8 @@
+../Core/Src/RTOS_Task.cpp:38:6:static void PatientDetailsTask::Task(void*)	16	static
+../Core/Src/RTOS_Task.cpp:82:6:static void DataAcquisitionTask::Task(void*)	24	static
+../Core/Src/RTOS_Task.cpp:106:6:static void SensorProcessingTask::Task(void*)	64	static
+../Core/Src/RTOS_Task.cpp:139:6:static void HealthMonitorTask::Task(void*)	32	static
+../Core/Src/RTOS_Task.cpp:201:6:static void DisplayTask::Task(void*)	32	static
+../Core/Src/RTOS_Task.cpp:310:6:static void ButtonHandlerTask::Task(void*)	24	static
+../Core/Src/RTOS_Task.cpp:362:6:static void AlertTask::Task(void*)	24	static
+../Core/Src/RTOS_Task.cpp:390:6:static void DebugTask::Task(void*)	80	static
